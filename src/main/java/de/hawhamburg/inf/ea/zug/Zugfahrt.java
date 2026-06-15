@@ -49,7 +49,7 @@ public class Zugfahrt {
             // Wir lassen Entfernung und Energie aktualisieren
             zug.tick(); // ein Zeitschritt: Zug rollt, Energie steigt
             schritte++;
-            if (zug.getEntfernung() - 1000.0 >= 0) {
+            if (zug.getEntfernung() >= 1000 || zug.getGeschwindigkeit() == 0) {
                 break;
             }
         }
