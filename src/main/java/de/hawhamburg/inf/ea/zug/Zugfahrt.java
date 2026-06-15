@@ -36,6 +36,8 @@ public class Zugfahrt {
         }
 
         var gene = ind.gene(); // hol den GP-Baum aus diesem Individuum heraus
+
+        int schritte = 0; // Schritte = Zeit
         for (int i = 0; i < 100; i++) { // Maximal 100 Schritte
             // Wir rufen das Kontrollprogramm des Zugs auf.
             // Je nach Entfernung (und ggfls. aktueller Geschwindigkeit) soll
@@ -46,12 +48,22 @@ public class Zugfahrt {
 
             // Wir lassen Entfernung und Energie aktualisieren
             zug.tick(); // ein Zeitschritt: Zug rollt, Energie steigt
+            schritte++;
             if (zug.getEntfernung() - 1000.0 >= 0) {
                 break;
             }
         }
 
-        return Math.abs(zug.getEntfernung() - 1000) + zug.getEnergie();
+        double distanz = Math.abs(zug.getEntfernung() - 1000);
+        double energie = zug.getEnergie();
+        double zeit = schritte;
+
+        // Gewichtungen
+        double w1 = 100.0;   // Entfernung: höchste Priorität (kleine Zahl, also stark gewichten)
+        double w2 = 0.01;    // Energie: große Zahl, also klein gewichten, damit sie nicht alles dominiert
+        double w3 = 1.0;     // Zeit: mittlere Bedeutung
+
+        return w1 * distanz + w2 * energie + w3 * zeit;
     }
 
     public static void main(String[] args) {
