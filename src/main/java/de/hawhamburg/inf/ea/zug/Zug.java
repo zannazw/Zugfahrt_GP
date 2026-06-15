@@ -107,6 +107,9 @@ public class Zug {
     private double energie;
 
     public void setGeschwindigkeit(double geschwindigkeit) {
+        double max = 30;   // 30 m/s
+        if (geschwindigkeit < 0) geschwindigkeit = 0;
+        if (geschwindigkeit > max) geschwindigkeit = max;
         this.geschwindigkeit = geschwindigkeit;
     }
 
