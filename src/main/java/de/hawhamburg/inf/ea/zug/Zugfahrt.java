@@ -66,6 +66,41 @@ public class Zugfahrt {
         return w1 * distanz + w2 * energie + w3 * zeit;
     }
 
+    public static void visualisiere(Genotype<ProgramGene<Double>> ind) {
+        Zug zug = new Zug();
+
+        for (var op : ind.gene().operations()) {
+            if (op instanceof Zug.Operation operation) operation.setZug(zug);
+        }
+        for (var op : ind.gene().terminals()) {
+            if (op instanceof Zug.Operation operation) operation.setZug(zug);
+        }
+
+        var gene = ind.gene();
+        final int ziel = 1000;
+        final int breite = 40;   // Länge des Balkens in Zeichen
+
+        for (int i = 0; i < 100; i++) {
+            gene.eval();
+            zug.tick();
+
+            // Position des Zuges in den Balken umrechnen
+            int pos = (int) Math.round(zug.getEntfernung() / ziel * breite);
+            pos = Math.max(0, Math.min(breite, pos));   // im Balken halten
+
+            StringBuilder bar = new StringBuilder("S");
+            for (int k = 0; k < breite; k++) {
+                bar.append(k == pos ? "X" : "_");
+            }
+            bar.append("Z");
+
+            System.out.printf("%s  [Entf=%.0f m] [v=%.1f] [E=%.0f]%n",
+                    bar, zug.getEntfernung(), zug.getGeschwindigkeit(), zug.getEnergie());
+
+            if (zug.getEntfernung() >= ziel) break;
+        }
+    }
+
     public static void main(String[] args) {
         final ISeq<Op<Double>> operations = ISeq.of( // unveränderliche Liste
                 new Zug.SetSpeed(),
@@ -92,7 +127,7 @@ public class Zugfahrt {
 
         final EvolutionResult<ProgramGene<Double>, Double> result = engine // Evolution laufen lassen
                 .stream()
-                .limit(Limits.byFixedGeneration(10))
+                .limit(Limits.byFixedGeneration(50))
                 .collect(EvolutionResult.toBestEvolutionResult());
 
 
@@ -102,5 +137,7 @@ public class Zugfahrt {
         System.out.println("Generations: " + result.totalGenerations());
         System.out.println("Function:    " + tree);
         System.out.println("Error:       " + error(result.bestPhenotype().genotype()));
+
+        visualisiere(result.bestPhenotype().genotype());
     }
 }
