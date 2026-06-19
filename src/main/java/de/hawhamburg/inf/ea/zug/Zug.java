@@ -130,7 +130,10 @@ public class Zug {
      */
     public void tick() {
         // Physiker*innen bitte wegsehen...
-        this.entfernung += geschwindigkeit;
-        this.energie += geschwindigkeit * geschwindigkeit;
+        double rest = 1000 - this.entfernung;
+        double schritt = Math.min(this.geschwindigkeit, rest);
+        this.geschwindigkeit = schritt;
+        this.entfernung += schritt;
+        this.energie += schritt * schritt;
     }
 }
