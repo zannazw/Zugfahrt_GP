@@ -59,7 +59,7 @@ public class Zugfahrt {
         double zeit = schritte;
 
         // Gewichtungen
-        double w1 = 100.0;   // Entfernung: höchste Priorität (kleine Zahl, also stark gewichten)
+        double w1 = 500.0;   // Entfernung: höchste Priorität (kleine Zahl, also stark gewichten)
         double w2 = 0.01;    // Energie: große Zahl, also klein gewichten, damit sie nicht alles dominiert
         double w3 = 1.0;     // Zeit: mittlere Bedeutung
 
@@ -78,15 +78,15 @@ public class Zugfahrt {
 
         var gene = ind.gene();
         final int ziel = 1000;
-        final int breite = 40;   // Länge des Balkens in Zeichen
+        final int breite = 40;   // Länge des Balkens
 
         for (int i = 0; i < 100; i++) {
             gene.eval();
             zug.tick();
 
-            // Position des Zuges in den Balken umrechnen
+            // Position des Zuges in Balken umrechnen
             int pos = (int) Math.round(zug.getEntfernung() / ziel * breite);
-            pos = Math.max(0, Math.min(breite, pos));   // im Balken halten
+            pos = Math.max(0, Math.min(breite, pos));   // im Balken soll Zug halten
 
             StringBuilder bar = new StringBuilder("S");
             for (int k = 0; k < breite; k++) {
@@ -97,7 +97,9 @@ public class Zugfahrt {
             System.out.printf("%s  [Entf=%.0f m] [v=%.1f] [E=%.0f]%n",
                     bar, zug.getEntfernung(), zug.getGeschwindigkeit(), zug.getEnergie());
 
-            if (zug.getEntfernung() >= ziel) break;
+            if (zug.getEntfernung() >= 1000 || zug.getGeschwindigkeit() == 0) {
+                break;
+            }
         }
     }
 
