@@ -49,7 +49,7 @@ public class Zugfahrt {
             // Wir lassen Entfernung und Energie aktualisieren
             zug.tick(); // ein Zeitschritt: Zug rollt, Energie steigt
             schritte++;
-            if (zug.getEntfernung() >= 1000 || zug.getGeschwindigkeit() == 0) {
+            if (zug.getGeschwindigkeit() == 0) {
                 break;
             }
         }
@@ -59,8 +59,8 @@ public class Zugfahrt {
         double zeit = schritte;
 
         // Gewichtungen
-        double w1 = 500.0;   // Entfernung: höchste Priorität (kleine Zahl, also stark gewichten)
-        double w2 = 0.01;    // Energie: große Zahl, also klein gewichten, damit sie nicht alles dominiert
+        double w1 = 100.0;   // Entfernung: höchste Priorität (kleine Zahl, also stark gewichten)
+        double w2 = 0.05;   // Energie: große Zahl, also klein gewichten, damit sie nicht alles dominiert
         double w3 = 1.0;     // Zeit: mittlere Bedeutung
 
         return w1 * distanz + w2 * energie + w3 * zeit;
@@ -97,7 +97,7 @@ public class Zugfahrt {
             System.out.printf("%s  [Entf=%.0f m] [v=%.1f] [E=%.0f]%n",
                     bar, zug.getEntfernung(), zug.getGeschwindigkeit(), zug.getEnergie());
 
-            if (zug.getEntfernung() >= 1000 || zug.getGeschwindigkeit() == 0) {
+            if (zug.getGeschwindigkeit() == 0) {
                 break;
             }
         }
